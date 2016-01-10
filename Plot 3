@@ -1,0 +1,14 @@
+housepwr <- read.table(paste(getwd(),"/household_power_consumption.txt", sep=""), header=TRUE, stringsAsFactors=FALSE, sep=";")
+house.pwr <- transform(subset(housepwr,Date=="1/2/2007"|Date=="2/2/2007"), Date=format(as.Date(Date, format="%d/%m/%Y"),"%Y-%m-%d"), Time=format(strptime(Time,format = "%H:%M:%S"),"%H:%M:%S"))
+for(i in 3:9) {house.pwr[,i] <- as.numeric(house.pwr[,i])}
+Time <- paste(house.pwr$Date,house.pwr$Time)
+Time <- strptime(Time,"%Y-%m-%d %H:%M:%S")
+house.pwr$Date <- Time
+
+png("Plot 3.png", width = 480, height = 480)
+plot(house.pwr$Date,house.pwr$Sub_metering_1,type="n", xlab="", ylab="Energy sub metering")
+lines(house.pwr$Date,house.pwr[,7],lwd=1.5,col=1)
+lines(house.pwr$Date,house.pwr[,8],lwd=1.5,col=2)
+lines(house.pwr$Date,house.pwr[,9],lwd=1.5,col=4)
+legend(x="topright",legend=c(colnames(house.pwr)[7:9]), lwd=c(2.5,2.5), col=c("black","red", "blue"))
+dev.off()
