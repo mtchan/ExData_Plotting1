@@ -1,0 +1,21 @@
+housepwr <- read.table(paste(getwd(),"/household_power_consumption.txt", sep=""), header=TRUE, stringsAsFactors=FALSE, sep=";")
+house.pwr <- transform(subset(housepwr,Date=="1/2/2007"|Date=="2/2/2007"), Date=format(as.Date(Date, format="%d/%m/%Y"),"%Y-%m-%d"), Time=format(strptime(Time,format = "%H:%M:%S"),"%H:%M:%S"))
+for(i in 3:9) {house.pwr[,i] <- as.numeric(house.pwr[,i])}
+Time <- paste(house.pwr$Date,house.pwr$Time)
+Time <- strptime(Time,"%Y-%m-%d %H:%M:%S")
+house.pwr$Date <- Time
+
+png("Plot 4.png", width = 480, height = 480)
+par(mfcol=c(2,2))
+plot(house.pwr$Date,house.pwr$Global_active_power,type="n", xlab="", ylab="Global Active Power")
+lines(house.pwr$Date,house.pwr$Global_active_power,lwd=1.5)
+plot(house.pwr$Date,house.pwr$Sub_metering_1,type="n", xlab="", ylab="Energy sub metering")
+lines(house.pwr$Date,house.pwr[,7],lwd=1.5,col=1)
+lines(house.pwr$Date,house.pwr[,8],lwd=1.5,col=2)
+lines(house.pwr$Date,house.pwr[,9],lwd=1.5,col=4)
+legend(x="topright",legend=c(colnames(house.pwr)[7:9]), lwd=1, col=c("black","red", "blue"), box.lty=0, cex=0.7, bg=NULL)
+plot(house.pwr$Date,house.pwr$Voltage,type="n", xlab="datetime", ylab="Voltage")
+lines(house.pwr$Date,house.pwr$Voltage,lwd=1.5)
+plot(house.pwr$Date,house.pwr$Global_reactive_power,type="n", xlab="datetime", ylab="Global_reactive_power")
+lines(house.pwr$Date,house.pwr$Global_reactive_power,lwd=1.5)
+dev.off()
