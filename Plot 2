@@ -1,0 +1,11 @@
+housepwr <- read.table(paste(getwd(),"/household_power_consumption.txt", sep=""), header=TRUE, stringsAsFactors=FALSE, sep=";")
+house.pwr <- transform(subset(housepwr,Date=="1/2/2007"|Date=="2/2/2007"), Date=format(as.Date(Date, format="%d/%m/%Y"),"%Y-%m-%d"), Time=format(strptime(Time,format = "%H:%M:%S"),"%H:%M:%S"))
+for(i in 3:9) {house.pwr[,i] <- as.numeric(house.pwr[,i])}
+Time <- paste(house.pwr$Date,house.pwr$Time)
+Time <- strptime(Time,"%Y-%m-%d %H:%M:%S")
+house.pwr$Date <- Time
+
+png("Plot 2.png", width = 480, height = 480)
+plot(house.pwr$Date,house.pwr$Global_active_power,type="n", xlab="", ylab="Global Active Power (kilowatts)")
+lines(house.pwr$Date,house.pwr$Global_active_power, lwd=1.5)
+dev.off()
